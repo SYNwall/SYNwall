@@ -115,11 +115,11 @@ Performances
 
 Everything has been implemented to be used on low end devices, with very low resources. The choice of Quark hashing for the crpyto hash has been done for this reason. The overhead added by the OTP computation is almost invisible in the regular usage:
 
-<PIC>
+![low](https://github.com/SYNwall/SYNwall_site/blob/master/assets/images/synwall_constant_load.png)
 
 whilst you can see a consistent CPU saving when a lot of traffic is sent to the device:
 
-<PIC>
+![high](https://github.com/SYNwall/SYNwall_site/blob/master/assets/images/synwall_heavy_load.png)
 
 SYNgate
 -------
