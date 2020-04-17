@@ -567,7 +567,13 @@ void l4_send_check(struct sk_buff *skb, struct iphdr *iph)
     {
       udpHdr = udp_hdr(skb);
       udpHdr->check = 0;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 16, 0)
       udpHdr->check = udp_v4_check(l4len, iph->saddr, iph->daddr,
                                    csum_partial((char *)udpHdr, l4len, 0));
+#else
+      udpHdr->check = csum_tcpudp_magic(iph->saddr, iph->daddr, l4len,
+                                        IPPROTO_UDP,
+                                        csum_partial((char *)udpHdr, l4len, 0));
+#endif
     }
 }
