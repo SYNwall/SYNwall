@@ -16,9 +16,9 @@ No prior knowledge about who need to access is required, we just need a Pre-Shar
 Install
 -------
 
-This repository contains the Linux Kernel module. It has been tested with **3.x, 4.x and 5.x** version on **X86_64, ARM, MIPS and AARCH64** architecures.
+This repository contains the Linux Kernel module. It has been tested with **3.x, 4.x and 5.x** version on **X86_64, ARM, MIPS and AARCH64** architectures.
 
-It requires the current kernel headers for compilation, which can be usually installed with the proper package manager. For example on Debian like distros
+It requires the current kernel headers for compilation, which can be usually installed with the proper package manager. For example on Debian like distros:
 
 ```sudo apt-get install linux-headers-$(uname -r)```
 
@@ -31,7 +31,7 @@ Configuration
 
 The module can be loaded in the usual way, with ```insmod``` or ```modprobe```. 
 
-It has several parameters that allow you to cusomize the behaviour:
+It has several parameters that allow you to customize the behaviour:
 
 - Pre-Shared Key used for the OneTimePassword
 
@@ -102,7 +102,7 @@ Project Structure
 **SYNwall** repository:
 
    - SYNwall_netfilter (.c and .h): Netfilter main package, with hooks and basic process functions
-      - SYNauth (.c and .h): authentication functins, used to manage hashes and crypt stuff
+      - SYNauth (.c and .h): authentication functions, used to manage hashes and crypt stuff
       - SYNquark (.c and .h): Quark hashing implementation, directly based on the work done by Jean-Philippe Aumasson (@veorq)
    - SYNgate_netfilter (.c and .h): Netfilter package for SOCKS server module. It implements only the "outgoing" packet marking and
                                     is able to manage multiple PSK and Networks
@@ -113,7 +113,7 @@ Project Structure
 Performances
 ------------
 
-Everything has been implemented to be used on low end devices, with very low resources. The choice of Quark hashing for the crpyto hash has been done for this reason. The overhead added by the OTP computation is almost invisible in the regular usage:
+Everything has been implemented to be used on low end devices, with very low resources. The choice of Quark hashing for the crypto hash has been done for this reason. The overhead added by the OTP computation is almost invisible in the regular usage:
 
 ![low](https://github.com/SYNwall/SYNwall_site/blob/master/assets/images/synwall_constant_load.png)
 
@@ -134,15 +134,15 @@ SYNgate Configuration
 
 The module can be loaded in the usual way, with ```insmod``` or ```modprobe```.
 
-It has several parameters that allow you to cusomize the behaviour. It is very similar to the **SYNwall** configuration, but with a different logic: parameters are (comma separated) list of values. The first value of a list correspond to the first of the others. Not all params are available, just the ones that make sense (remember the SYNgate will not affect incoming traffic):
+It has several parameters that allow you to customize the behaviour. It is very similar to the **SYNwall** configuration, but with a different logic: parameters are (comma separated) list of values. The first value of a list correspond to the first of the others. Not all params are available, just the ones that make sense (remember the SYNgate will not affect incoming traffic):
 
-It has only one paramter different from the **SYNwall** config, the **dstnet_list**
+It has only one parameter different from the **SYNwall** config, the **dstnet_list**
 
 - Destination network
 
   dstnet_list: ""
 
-  List of networks in the IP/MASK format. Example: 192.168.1.0/24. If an IP is given (instead of network address), the network will be computed. All the IPs belonging to this network, will have the connection parameters (PSK, precision, etc) specified in the oter lists, at the same array index.
+  List of networks in the IP/MASK format. Example: 192.168.1.0/24. If an IP is given (instead of network address), the network will be computed. All the IPs belonging to this network, will have the connection parameters (PSK, precision, etc) specified in the other lists, at the same array index.
 
 - Pre-Shared Key used for the OneTimePassword
 
