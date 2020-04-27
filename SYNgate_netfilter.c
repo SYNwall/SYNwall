@@ -47,7 +47,8 @@
 // Max number of destinations managed by the module
 #define MAX_DESTINATIONS   100
 
-#define LOCALHOST 2130706433           // Decimal LE rep of 127.0.0.1
+#define LOCALHOSTNET   2130706432          // Decimal LE rep of 127.0.0.0
+#define LOCALHOSTBCAST 2147483647          // Decimal LE rep of 127.255.255.255
 
 static struct nf_hook_ops *nfho_out = NULL;
 static int psklen[MAX_DESTINATIONS];
@@ -145,7 +146,7 @@ static unsigned int outgoing_pkt(unsigned int hooknum, struct sk_buff *skb,
   daddr = ntohl(iph->daddr);       // Get destination address
 
   // Ignore packets going to LOCALHOST
-  if (daddr == LOCALHOST)
+  if (daddr >= LOCALHOSTNET && daddr <= LOCALHOSTBCAST)
     {
       goto exit_accept;
     }

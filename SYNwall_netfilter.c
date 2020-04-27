@@ -43,7 +43,8 @@
 #define DBGTAG "SYNwall"
 #define VERSION "v0.2"
 
-#define LOCALHOST 2130706433          // Decimal LE rep of 127.0.0.1
+#define LOCALHOSTNET   2130706432          // Decimal LE rep of 127.0.0.0
+#define LOCALHOSTBCAST 2147483647          // Decimal LE rep of 127.255.255.255
 
 #ifdef DEBUG
 static void DEBUG_test_quark(void);
@@ -186,7 +187,7 @@ static unsigned int incoming_pkt(unsigned int hooknum, struct sk_buff *skb,
     }
 
   // Ignore packets coming from LOCALHOST
-  if (saddr == LOCALHOST)
+  if (saddr >= LOCALHOSTNET && saddr <= LOCALHOSTBCAST)
     {
       goto exit_accept;
     }
@@ -377,7 +378,7 @@ static unsigned int outgoing_pkt(unsigned int hooknum, struct sk_buff *skb,
   daddr = ntohl(iph->daddr);       // Get destination address
 
   // Ignore packets going to LOCALHOST
-  if (daddr == LOCALHOST)
+  if (daddr >= LOCALHOSTNET && daddr <= LOCALHOSTBCAST)
     {
       goto exit_accept;
     }
