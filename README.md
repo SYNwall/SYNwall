@@ -52,11 +52,13 @@ It has several parameters that allow you to customize the behaviour:
 
   The OTP is computed also with the current device time. Since the date could be different on the participating devices, you can "round" the time on a specific value, to allow time skew. Default is **10**.
 
-  The precision is expressed in power of two (you may argue why...it has been a decision to increase performance and have low impact on low end devices
+  The precision is expressed in power of two (you may argue why...it has been a decision to increase performance and have low impact on low end devices):
+  ```
        ...
        9   ->   1 second
        10  ->   8 seconds
        ...
+  ```
 
 - Disable the OTP for outgoing packets
 
@@ -134,47 +136,54 @@ SYNgate Configuration
 
 The module can be loaded in the usual way, with ```insmod``` or ```modprobe```.
 
-It has several parameters that allow you to customize the behaviour. It is very similar to the **SYNwall** configuration, but with a different logic: parameters are (comma separated) list of values. The first value of a list correspond to the first of the others. Not all params are available, just the ones that make sense (remember the SYNgate will not affect incoming traffic):
+It has several parameters that allow you to customize the behaviour. It is very similar to the **SYNwall** configuration, but with a different logic: parameters are (comma separated) list of values and all of them have to be specified. The first value of a list correspond to the first of the others. Not all params are available, just the ones that make sense (remember the SYNgate will not affect incoming traffic):
 
 It has only one parameter different from the **SYNwall** config, the **dstnet_list**
 
 - Destination network
 
-  dstnet_list: ""
+  dstnet_list: "ip1/mask1[,ip2/mask2]..."
 
   List of networks in the IP/MASK format. Example: 192.168.1.0/24. If an IP is given (instead of network address), the network will be computed. All the IPs belonging to this network, will have the connection parameters (PSK, precision, etc) specified in the other lists, at the same array index.
 
 - Pre-Shared Key used for the OneTimePassword
 
-  psk_list: ""
-
+  psk_list: "pks1[,pks2]..."
+  
   The PSK, must be a sequence of bytes from 32 to 1024. It will be part of the OTP, so the length of it will influence the size of the OTP injected in the packet. Without this parameter, the module will not load.
 
 - Enable UDP
 
-  enable_udp_list: 0
+  enable_udp_list: {0|1}[,{0|1}]...
 
-  Enable/Disable the OTP for UDP protocol. By default it is **disabled**. Set to **1** to enable it. The OTP on UDP requires the module to be active on both of the communicating devices, since the OTP must be removed (by the module) before the packet is forwarded to the application level. If this is not true, you may experience weird behaviors.
+  Enable/Disable the OTP for UDP protocol. Set to **0** to disable it or **1** to enable it. The OTP on UDP requires the module to be active on both of the communicating devices, since the OTP must be removed (by the module) before the packet is forwarded to the application level. If this is not true, you may experience weird behaviors.
   The UDP connection tracking, relies on **conntrack** module, so you may have to insert it to use this functionality (this depends on the installation). An error will be displayed in the kernel log if so.
 
 - Time precision parameter
 
-  precision_list: 10
+  precision_list: {9|10|...}[,{9|10|...}]...
 
   The OTP is computed also with the current device time. Since the date could be different on the participating devices, you can "round" the time on a specific value, to allow time skew.
 
-  The precision is expressed in power of two (you may argue why...it has been a decision to increase performance and have low impact on low end devices
+  The precision is expressed in power of two (you may argue why...it has been a decision to increase performance and have low impact on low end devices):
+  ```
        ...
        9   ->   1 second
        10  ->   8 seconds
        ...
-
+  ```
 - Enable IP Spoofing protection
 
-  enable_antispoof_list: 0
+  enable_antispoof_list: {0|1}[,{0|1}]...
 
-  By default the IP is not part of the OTP. This could lead to some replay attack. You can enable the antispoof protection to be fully safe. This may break the communication if some NATs are in place between the devices.
+  Enable/Disable the antispoof protection. Set to **0** to disable it or **1** to enable it. By default the IP is not part of the OTP on SYNwall. This could lead to some replay attack. You can enable the antispoof protection to be fully safe. This may break the communication if some NATs are in place between the devices.
 
+Example of usage
+----------------
+
+Example with two networks:
+
+```sudo insmod SYNgate.ko dstnet_list="10.1.1.0/24,198.168.10.0/24" psk_list="d41d8cd98f00b204e9800998ecf8427e,efebceec0de382839cd38bffcdc6bf0c" enable_udp_list=0,0 precision_list=10,9 enable_antispoof_list=0,1```
 
 License
 -------
