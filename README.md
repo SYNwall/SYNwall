@@ -59,6 +59,9 @@ It has several parameters that allow you to customize the behaviour:
        10  ->   8 seconds
        ...
   ```
+  Precision under 8 is probably not going to work. 
+
+  If you increase the precision value at 11 or more, consider to increase also the ```MAX_TRASH``` value in ```SYNgate_netfilter.c```
 
 - Disable the OTP for outgoing packets
 
