@@ -562,13 +562,19 @@ static int __init SYNwall_init(void)
          enable_udp);
   if (portk_count == 5)
     {
-      printk(KERN_INFO "%s: Port Knocking enabled: "
+      printk(KERN_INFO "%s: Port Knocking enabled\n", DBGTAG);
+#ifdef DEBUG
+      if (DBGLVL >= 1)
+      {
+        printk(KERN_INFO "%s: Port Knocking sequence: "
              "%d,%d,%d,%d,%d\n", DBGTAG,
              portk[0],
              portk[1],
              portk[2],
              portk[3],
              portk[4]);
+      }
+#endif
     }
 
   // May be to replaced, on older kernel, with:
