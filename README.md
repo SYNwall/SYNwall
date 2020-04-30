@@ -145,13 +145,13 @@ It has only one parameter different from the **SYNwall** config, the **dstnet_li
 
 - Destination network
 
-  dstnet_list: "ip1/mask1[,ip2/mask2]..."
+  dstnet_list: ip1/mask1[,ip2/mask2]...
 
   List of networks in the IP/MASK format. Example: 192.168.1.0/24. If an IP is given (instead of network address), the network will be computed. All the IPs belonging to this network, will have the connection parameters (PSK, precision, etc) specified in the other lists, at the same array index.
 
 - Pre-Shared Key used for the OneTimePassword
 
-  psk_list: "pks1[,pks2]..."
+  psk_list: pks1[,pks2]...
   
   The PSK, must be a sequence of bytes from 32 to 1024. It will be part of the OTP, so the length of it will influence the size of the OTP injected in the packet. Without this parameter, the module will not load.
 
@@ -184,9 +184,21 @@ It has only one parameter different from the **SYNwall** config, the **dstnet_li
 Example of usage
 ----------------
 
-Example with two networks:
+Example with two networks directly from CLI:
 
-```sudo insmod SYNgate.ko dstnet_list="10.1.1.0/24,198.168.10.0/24" psk_list="d41d8cd98f00b204e9800998ecf8427e,efebceec0de382839cd38bffcdc6bf0c" enable_udp_list=0,0 precision_list=10,9 enable_antispoof_list=0,1```
+```sudo insmod SYNgate.ko dstnet_list=10.1.1.0/24,198.168.10.0/24 psk_list=d41d8cd98f00b204e9800998ecf8427e,efebceec0de382839cd38bffcdc6bf0c enable_udp_list=0,0 precision_list=10,9 enable_antispoof_list=0,1```
+
+or using a configuration file:
+```
+sudo cat /etc/modprobe.d/SYNgate.conf
+# SYNgate config file
+# Keep it safe!!
+options SYNgate dstnet_list=10.1.1.0/24,198.168.10.0/24
+options SYNgate psk_list=d41d8cd98f00b204e9800998ecf8427e,efebceec0de382839cd38bffcdc6bf0c
+options SYNgate enable_udp_list=0,0 
+options SYNgate precision_list=10,9 
+options SYNgate enable_antispoof_list=0,1
+```
 
 License
 -------
