@@ -133,6 +133,10 @@ As a companion tool, the repository has also the **SYNgate** module. The **SYNga
 
 **SYNgate** is working only on **outgoing** traffic.
 
+To compile the SYNgate module, just use:
+
+```make SYNGATE=1```
+
 
 SYNgate Configuration
 ---------------------
