@@ -7,7 +7,7 @@ endif
 
 ifndef SYNGATE
   ifndef SYNWALL
-    obj-m += SYNwall.o SYNgate.o
+    obj-m += SYNwall.o
   endif
 endif
 
