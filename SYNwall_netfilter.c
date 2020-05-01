@@ -1018,7 +1018,7 @@ static u8 process_tcp_out(struct sk_buff *skb, struct iphdr *iph,
       // Error in allocating memory
       printk(KERN_INFO "%s: OUTGOING TCP failed to allocate payload "
              "memory\n", DBGTAG);
-      goto exit_accept_tcpout;
+      goto exit_drop_tcpout;
     }
 
   if (get_otp(PAYLOAD, psk, psklen, precision, daddr)
@@ -1027,7 +1027,7 @@ static u8 process_tcp_out(struct sk_buff *skb, struct iphdr *iph,
       // Error in getting the OTP
       printk(KERN_INFO "%s: OUTGOING TCP failed to compute payload\n",
              DBGTAG);
-      goto exit_accept_tcpout;
+      goto exit_drop_tcpout;
     }
 
   set_otp(PAYLOAD, skb, iph, tcph, NULL);
@@ -1066,7 +1066,7 @@ static u8 process_udp_out(struct sk_buff *skb, struct iphdr *iph,
       // Error in allocating memory
       printk(KERN_INFO "%s: OUTGOING UDP failed to allocate payload "
              "memory\n", DBGTAG);
-      goto exit_accept_udpout;
+      goto exit_drop_udpout;
     }
 
   if (get_otp(PAYLOAD, psk, psklen, precision, daddr) != 0)
@@ -1074,7 +1074,7 @@ static u8 process_udp_out(struct sk_buff *skb, struct iphdr *iph,
       // Error in getting the OTP
       printk(KERN_INFO "%s: OUTGOING UDP failed to compute payload\n",
              DBGTAG);
-      goto exit_accept_udpout;
+      goto exit_drop_udpout;
     }
 
   set_otp(PAYLOAD, skb, iph, NULL, udph);
