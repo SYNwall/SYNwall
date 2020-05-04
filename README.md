@@ -35,7 +35,7 @@ It has several parameters that allow you to customize the behaviour:
 
 - Pre-Shared Key used for the OneTimePassword
 
-  psk: ""
+  psk: 
 
   The PSK, must be a sequence of bytes from 32 to 1024. It will be part of the OTP, so the length of it will influence the size of the OTP injected in the packet. Without this parameter, the module will not load.
 
@@ -99,7 +99,7 @@ Example of usage
 
 **_WARNING_**: this is going to drop all the traffic to your device, so be sure to know how to access with another SYNwall device or by disabling it remotely (port knocking).
 
-```sudo insmod SYNwall.ko psk="123456789012345678901234567890123" precision=10 portk=12,13,14,15,16 load_delay=5000 enable_udp=1```
+```sudo insmod SYNwall.ko psk=123456789012345678901234567890123 precision=10 portk=12,13,14,15,16 load_delay=5000 enable_udp=1```
 
 Project Structure
 -----------------
