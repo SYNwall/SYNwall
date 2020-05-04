@@ -267,13 +267,9 @@ static unsigned int incoming_pkt(unsigned int hooknum, struct sk_buff *skb,
       ct = nf_ct_get(skb, &ctinfo);
       if (ct == NULL)
         {
-#ifdef DEBUG
-          if (DBGLVL >= 2)
-            {
-              printk(KERN_INFO "%s: INCOMING UDP conntrack info invalid. "
-                     "May be we are missing a module.\n", DBGTAG);
-            }
-#endif
+          printk(KERN_INFO "%s: INCOMING UDP conntrack info invalid. "
+                 "May be we are missing a module.\n", DBGTAG);
+
           // We don't have conntrack info...drop
           goto exit_drop;
         }
@@ -453,13 +449,9 @@ static unsigned int outgoing_pkt(unsigned int hooknum, struct sk_buff *skb,
       ct = nf_ct_get(skb, &ctinfo);
       if (ct == NULL)
         {
-#ifdef DEBUG
-          if (DBGLVL >= 2)
-            {
-              printk(KERN_INFO "%s: INCOMING UDP conntrack info invalid. "
-                     "May be we are missing a module.\n", DBGTAG);
-            }
-#endif
+          printk(KERN_INFO "%s: OUTGOING UDP conntrack info invalid. "
+                 "May be we are missing a module.\n", DBGTAG);
+
           // We don't have conntrack info...let it go
           goto exit_accept;
         }
@@ -565,15 +557,15 @@ static int __init SYNwall_init(void)
       printk(KERN_INFO "%s: Port Knocking enabled\n", DBGTAG);
 #ifdef DEBUG
       if (DBGLVL >= 1)
-      {
-        printk(KERN_INFO "%s: Port Knocking sequence: "
-             "%d,%d,%d,%d,%d\n", DBGTAG,
-             portk[0],
-             portk[1],
-             portk[2],
-             portk[3],
-             portk[4]);
-      }
+        {
+          printk(KERN_INFO "%s: Port Knocking sequence: "
+                 "%d,%d,%d,%d,%d\n", DBGTAG,
+                 portk[0],
+                 portk[1],
+                 portk[2],
+                 portk[3],
+                 portk[4]);
+        }
 #endif
     }
 

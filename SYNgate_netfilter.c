@@ -224,13 +224,9 @@ static unsigned int outgoing_pkt(unsigned int hooknum, struct sk_buff *skb,
       ct = nf_ct_get(skb, &ctinfo);
       if (ct == NULL)
         {
-#ifdef DEBUG
-          if (DBGLVL >= 2)
-            {
-              printk(KERN_INFO "%s: OUTGOING UDP conntrack info invalid. "
-                     "May be we are missing a module.\n", DBGTAG);
-            }
-#endif
+          printk(KERN_INFO "%s: OUTGOING UDP conntrack info invalid. "
+                 "May be we are missing a module.\n", DBGTAG);
+                 
           // We don't have conntrack info...let it go
           goto exit_accept;
         }
