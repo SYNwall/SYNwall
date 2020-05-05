@@ -108,7 +108,7 @@ Project Structure
 
    - SYNwall_netfilter (.c and .h): Netfilter main package, with hooks and basic process functions
       - SYNauth (.c and .h): authentication functions, used to manage hashes and crypt stuff
-      - SYNquark (.c and .h): Quark hashing implementation, directly based on the work done by Jean-Philippe Aumasson (@veorq)
+      - SYNquark (.c and .h): Quark hashing implementation, directly based on the work done by Jean-Philippe Aumasson (@veorq) at [https://github.com/veorq/Quark](https://github.com/veorq/Quark)
    - SYNgate_netfilter (.c and .h): Netfilter package for SOCKS server module. It implements only the "outgoing" packet marking and
                                     is able to manage multiple PSK and Networks
 
