@@ -542,7 +542,6 @@ static u8 validate_params(void)
       goto exit_error;
     }
 
-exit_success:
   return 0;
 
 exit_error:
@@ -598,7 +597,6 @@ static u8 validate_dstnet(void)
       dstnet_addr[i] = htonl(dstnet_addr[i]);
     }
 
-exit_success:
   return 0;
 
 exit_error:
@@ -623,7 +621,6 @@ static u8 validate_psk(void)
       psklen[i] = len;
     }
 
-exit_success:
   return 0;
 
 exit_error:
@@ -646,7 +643,6 @@ static u8 validate_precision(void)
         }
     }
 
-exit_success:
   return 0;
 
 exit_error:
@@ -669,7 +665,6 @@ static u8 validate_antispoof(void)
         }
     }
 
-exit_success:
   return 0;
 
 exit_error:
@@ -692,7 +687,6 @@ static u8 validate_udp(void)
         }
     }
 
-exit_success:
   return 0;
 
 exit_error:

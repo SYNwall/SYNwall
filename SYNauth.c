@@ -529,7 +529,6 @@ int set_otp(u8 *PAYLOAD, struct sk_buff *skb,
 
   // Level 4 checksum
   l4_send_check(skb, iph);
-exit_success:
 
 #ifdef DEBUG
   if (DBGLVL >= 1)
