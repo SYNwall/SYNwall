@@ -306,6 +306,10 @@ exit_drop:
 
 // Process outgoing TCP packets.
 // It returns 0 if packet must be accepted, otherwise return 1
+// Using gcc < 4.2.4 can raise and error at the following
+// #pragma" lines, if this is the case just comment it out
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-label"
 static u8 process_tcp_out(struct sk_buff *skb, struct iphdr *iph,
                           struct tcphdr *tcph, int i)
 {
@@ -358,9 +362,14 @@ exit_accept_tcpout:
   kfree(PAYLOAD);
   return 0;
 }
+#pragma GCC diagnostic pop
 
 // Process outgoing UDP packets.
 // It return 0 if packet must be accepted, otherwise return 1
+// Using gcc < 4.2.4 can raise and error at the following
+// #pragma" lines, if this is the case just comment it out
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-label"
 static u8 process_udp_out(struct sk_buff *skb, struct iphdr *iph,
                           struct udphdr *udph, int i)
 {
@@ -412,6 +421,7 @@ exit_accept_udpout:
   kfree(PAYLOAD);
   return 0;
 }
+#pragma GCC diagnostic pop
 
 // Load the module
 static int __init SYNgate_init(void)
