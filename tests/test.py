@@ -10,27 +10,30 @@ port = 44144
 message = b'CANYOUREAD'
 
 
-def main(host):
-    try:
-        Thread(target=start_tcp_server, args=(host, port, message)).start()
-    except:
-        print('[!] TCP Server not started')
-        traceback.print_exc()
+def main(host,proto):
+    if proto == 'tcp':
+        try:
+            Thread(target=start_tcp_server, args=(host, port, message)).start()
+        except:
+            print('[!] TCP Server not started')
+            traceback.print_exc()
 
-    time.sleep(1)
-    print('[+] Starting client')
-    start_client(host, port, message)
+        time.sleep(1)
+        print('[+] Starting client')
+        start_client(host, port, message)
 
-    time.sleep(1)
-    try:
-        Thread(target=start_udp_server, args=(host, port, message)).start()
-    except:
-        print('[!] UDP Server not started')
-        traceback.print_exc()
+        time.sleep(1)
 
-    time.sleep(1)
-    print('[+] Starting client')
-    start_client(host, port, message, True)
+    if proto == 'udp':
+        try:
+            Thread(target=start_udp_server, args=(host, port, message)).start()
+        except:
+            print('[!] UDP Server not started')
+            traceback.print_exc()
+
+        time.sleep(1)
+        print('[+] Starting client')
+        start_client(host, port, message, True)
 
 
 def start_tcp_server(host, port, message):
@@ -57,10 +60,10 @@ def start_tcp_server(host, port, message):
 
     # Test the result
     if client_input == message:
-        print('[+] Test OK!')
+        print('[+] Test OK!\n')
         sys.exit(0)
     else:
-        print('[!] Test FAILED!')
+        print('[!] Test FAILED!\n')
         sys.exit(1)
 
 
@@ -84,10 +87,10 @@ def start_udp_server(host, port, message):
 
     # Test the result
     if client_input == message:
-        print('[+] Test OK!')
+        print('[+] Test OK!\n')
         sys.exit(0)
     else:
-        print('[!] Test FAILED!')
+        print('[!] Test FAILED!\n')
         sys.exit(1)
 
 
@@ -107,12 +110,16 @@ def start_client(host, port, message, udp=False):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print('Usage: test.py <IP address>')
+    if len(sys.argv) != 3:
+        print('Usage: test.py <proto> <IP address>')
         sys.exit(1)
 
-    if socket.gethostbyname(sys.argv[1]).startswith('127'):
+    if sys.argv[1] != 'udp' and sys.argv[1] != 'tcp':
+        print('[!] proto must be tcp or udp')
+        sys.exit(1)
+
+    if socket.gethostbyname(sys.argv[2]).startswith('127'):
         print('[!] Do not use LOCALHOST for testing!')
         sys.exit(1)
 
-    main(sys.argv[1])
+    main(sys.argv[2],sys.argv[1])

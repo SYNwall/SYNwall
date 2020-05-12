@@ -39,7 +39,8 @@ clean:
 test:
 	$(info **** REMEMBER TO REMOVE MODULE (sudo rmmod SYNwall) if test fails ****)
 	$(info )
-	sudo insmod SYNwall.ko psk="12345678901234567890123456789012" load_delay=0 precision=8
+	sudo insmod SYNwall.ko psk=12345678901234567890123456789012 load_delay=0 precision=8 enable_udp=1
 	sleep 2
-	python tests/test.py `ip route get 8.8.8.8 | head -1 | sed -n "s/.*src \([0-9.]\+\).*/\1/p"`
+	python tests/test.py tcp `ip route get 8.8.8.8 | head -1 | sed -n "s/.*src \([0-9.]\+\).*/\1/p"`
+	python tests/test.py udp `ip route get 8.8.8.8 | head -1 | sed -n "s/.*src \([0-9.]\+\).*/\1/p"`
 	sudo rmmod SYNwall
