@@ -9,23 +9,35 @@ from threading import Thread
 port = 44144
 message = b'CANYOUREAD'
 
+
 def main(host):
     try:
-       Thread(target=start_server,args=(host,port,message)).start()
+        Thread(target=start_tcp_server, args=(host, port, message)).start()
     except:
-       print('[!] Server not started')
-       traceback.print_exc()
+        print('[!] TCP Server not started')
+        traceback.print_exc()
 
     time.sleep(1)
     print('[+] Starting client')
-    start_client(host,port,message)
+    start_client(host, port, message)
 
-def start_server(host,port,message):
+    time.sleep(1)
+    try:
+        Thread(target=start_udp_server, args=(host, port, message)).start()
+    except:
+        print('[!] UDP Server not started')
+        traceback.print_exc()
 
+    time.sleep(1)
+    print('[+] Starting client')
+    start_client(host, port, message, True)
+
+
+def start_tcp_server(host, port, message):
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
+    soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     soc.settimeout(5)
-    print('[+] Socket created')
+    print('[+] TCP Socket created')
 
     try:
         soc.bind((host, port))
@@ -51,8 +63,39 @@ def start_server(host,port,message):
         print('[!] Test FAILED!')
         sys.exit(1)
 
-def start_client(host,port,message):
-    soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+def start_udp_server(host, port, message):
+    soc = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+    soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    soc.settimeout(5)
+    print('[+] UDP Socket created')
+
+    try:
+        soc.bind((host, port))
+    except:
+        print('[!] Bind failed. Error : ' + str(sys.exc_info()))
+        sys.exit(1)
+
+    client_input, address = soc.recvfrom(1024)
+    ip, port = str(address[0]), str(address[1])
+    print('[+] Connected with ' + ip + ':' + port)
+    print('[+] Received: ' + str(client_input))
+    soc.close()
+
+    # Test the result
+    if client_input == message:
+        print('[+] Test OK!')
+        sys.exit(0)
+    else:
+        print('[!] Test FAILED!')
+        sys.exit(1)
+
+
+def start_client(host, port, message, udp=False):
+    if udp:
+        soc = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+    else:
+        soc = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
     soc.settimeout(5)
     try:
         soc.connect((host, port))
@@ -62,10 +105,11 @@ def start_client(host,port,message):
     soc.sendall(message)
     soc.close()
 
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('Usage: test.py <IP address>')
-        sys.exit(1) 
+        sys.exit(1)
 
     if socket.gethostbyname(sys.argv[1]).startswith('127'):
         print('[!] Do not use LOCALHOST for testing!')
