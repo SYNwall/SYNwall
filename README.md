@@ -108,15 +108,15 @@ Project Structure
 
    - SYNwall_netfilter (.c and .h): Netfilter main package, with hooks and basic process functions
       - SYNauth (.c and .h): authentication functions, used to manage hashes and crypt stuff
-      - SYNquark (.c and .h): Quark hashing implementation, directly based on the work done by Jean-Philippe Aumasson (@veorq)
+      - SYNquark (.c and .h): Quark hashing implementation, directly based on the work done by Jean-Philippe Aumasson (@veorq) at [https://github.com/veorq/Quark](https://github.com/veorq/Quark)
    - SYNgate_netfilter (.c and .h): Netfilter package for SOCKS server module. It implements only the "outgoing" packet marking and
                                     is able to manage multiple PSK and Networks
 
 **SYNwall_distrib** repository:
    - Ansible scripts for automatic distribution. See README.md there
 
-Performances
-------------
+Performance
+-----------
 
 Everything has been implemented to be used on low end devices, with very low resources. The choice of Quark hashing for the crypto hash has been done for this reason. The overhead added by the OTP computation is almost invisible in the regular usage:
 

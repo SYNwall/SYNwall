@@ -14,7 +14,6 @@
 /*
  * Modified to be used in kernel for SYNwall project
  * by Sorint.lab
- * Released under GPL v3
  */
 
 #include <linux/module.h>
