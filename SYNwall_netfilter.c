@@ -267,8 +267,9 @@ static unsigned int incoming_pkt(unsigned int hooknum, struct sk_buff *skb,
       ct = nf_ct_get(skb, &ctinfo);
       if (ct == NULL)
         {
-          printk(KERN_INFO "%s: INCOMING UDP conntrack info invalid. "
-                 "May be we are missing a module.\n", DBGTAG);
+          printk(KERN_INFO "%s: INCOMING UDP conntrack info invalid\n",
+                 DBGTAG);
+          logs_udp_error();
 
           // We don't have conntrack info...drop
           goto exit_drop;
@@ -449,8 +450,9 @@ static unsigned int outgoing_pkt(unsigned int hooknum, struct sk_buff *skb,
       ct = nf_ct_get(skb, &ctinfo);
       if (ct == NULL)
         {
-          printk(KERN_INFO "%s: OUTGOING UDP conntrack info invalid. "
-                 "May be we are missing a module.\n", DBGTAG);
+          printk(KERN_INFO "%s: OUTGOING UDP conntrack info invalid.\n",
+                 DBGTAG);
+          logs_udp_error();
 
           // We don't have conntrack info...let it go
           goto exit_accept;
@@ -514,6 +516,8 @@ exit_drop:
 // Load the module
 static int __init SYNwall_init(void)
 {
+  struct module *mod;
+
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 13, 0)
   int random_res;
 #endif
@@ -526,6 +530,16 @@ static int __init SYNwall_init(void)
       goto exit_error;
     }
 
+  // Check for needed modules (for UDP protocol)
+  if (enable_udp == 1)
+    {
+      mod = find_module("xt_conntrack");
+      if (!mod)
+        {
+          logs_udp_error();
+          goto exit_error;
+        }
+    }
   // Define PAYLOADLEN depending on psk length
   PAYLOADLEN = DIGEST + psklen;
 
@@ -1210,6 +1224,16 @@ exit_accept_udpin:
 exit_drop_udpin:
   kfree(PAYLOAD);
   return 1;
+}
+
+// Logs UDP module error
+static void logs_udp_error(void)
+{
+  printk(KERN_INFO "%s: Looks like some modules needed for"
+         "UDP tracking are missing\n", DBGTAG);
+  printk(KERN_INFO "%s: You may try the following command:\n", DBGTAG);
+  printk(KERN_INFO "%s:   # iptables -A OUTPUT -m conntrack -p udp "
+         "--ctstate NEW,RELATED,ESTABLISHED -j ACCEPT\n", DBGTAG);
 }
 
 #ifdef DEBUG

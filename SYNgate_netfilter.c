@@ -224,9 +224,10 @@ static unsigned int outgoing_pkt(unsigned int hooknum, struct sk_buff *skb,
       ct = nf_ct_get(skb, &ctinfo);
       if (ct == NULL)
         {
-          printk(KERN_INFO "%s: OUTGOING UDP conntrack info invalid. "
-                 "May be we are missing a module.\n", DBGTAG);
-                 
+          printk(KERN_INFO "%s: OUTGOING UDP conntrack info invalid.\n",
+                 DBGTAG);
+          logs_udp_error();
+
           // We don't have conntrack info...let it go
           goto exit_accept;
         }
@@ -686,6 +687,8 @@ exit_error:
 // It returns 0 if success, otherwise 1
 static u8 validate_udp(void)
 {
+  struct module *mod;
+  uint8_t udp_used = 0;
   int i;
 
   // Check if the enable_udp value is 0 or 1
@@ -693,6 +696,22 @@ static u8 validate_udp(void)
     {
       if (enable_udp_list[i] != 0 && enable_udp_list[i] != 1)
         {
+          goto exit_error;
+        }
+
+      if (enable_udp_list[i] == 1)
+        {
+          udp_used = 1;
+        }
+    }
+
+  // Check for needed modules (for UDP protocol)
+  if (udp_used == 1)
+    {
+      mod = find_module("xt_conntrack");
+      if (!mod)
+        {
+          logs_udp_error();
           goto exit_error;
         }
     }
@@ -778,6 +797,16 @@ static u8 check_udp_blacklist(struct udphdr *udph)
     }
 
   return 0;
+}
+
+// Logs UDP module error
+static void logs_udp_error(void)
+{
+  printk(KERN_INFO "%s: Looks like some modules needed for"
+         "UDP tracking are missing\n", DBGTAG);
+  printk(KERN_INFO "%s: You may try the following command:\n", DBGTAG);
+  printk(KERN_INFO "%s:   # iptables -A OUTPUT -m conntrack -p udp "
+         "--ctstate NEW,RELATED,ESTABLISHED -j ACCEPT\n", DBGTAG);
 }
 
 module_init(SYNgate_init);
