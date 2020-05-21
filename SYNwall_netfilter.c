@@ -1229,10 +1229,10 @@ exit_drop_udpin:
 // Logs UDP module error
 static void logs_udp_error(void)
 {
-  printk(KERN_INFO "%s: Looks like some modules needed for"
+  printk(KERN_INFO "%s: Looks like some modules needed for "
          "UDP tracking are missing\n", DBGTAG);
   printk(KERN_INFO "%s: You may try the following command:\n", DBGTAG);
-  printk(KERN_INFO "%s:   # iptables -A OUTPUT -m conntrack -p udp "
+  printk(KERN_INFO "%s:   # sudo iptables -A OUTPUT -m conntrack -p udp "
          "--ctstate NEW,RELATED,ESTABLISHED -j ACCEPT\n", DBGTAG);
 }
 
