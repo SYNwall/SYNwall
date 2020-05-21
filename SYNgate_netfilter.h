@@ -156,3 +156,12 @@ static u8 process_tcp_out(struct sk_buff *skb, struct iphdr *iph,
  */
 static u8 process_udp_out(struct sk_buff *skb, struct iphdr *iph,
                           struct udphdr *udph, int i);
+
+/**
+ *  logs_udp_error - logs an error
+ *
+ *  When UDP protocol is enabled, a CONNTRACK module (and a CONNTRACK rule)
+ *  is needed. This just prints out an error when this condition is not
+ *  satisfied
+ */
+static void logs_udp_error(void);
