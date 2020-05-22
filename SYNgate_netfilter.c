@@ -42,7 +42,7 @@
 #include "SYNauth.h"
 
 #define DBGTAG "SYNgate"
-#define VERSION "v0.3"
+#define VERSION "v0.3a"
 
 // Max number of destinations managed by the module
 #define MAX_DESTINATIONS   100

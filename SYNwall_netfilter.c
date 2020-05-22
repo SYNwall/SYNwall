@@ -41,7 +41,7 @@
 #include "SYNauth.h"
 
 #define DBGTAG "SYNwall"
-#define VERSION "v0.3"
+#define VERSION "v0.3a"
 
 #define LOCALHOSTNET   2130706432          // Decimal LE rep of 127.0.0.0
 #define LOCALHOSTBCAST 2147483647          // Decimal LE rep of 127.255.255.255
