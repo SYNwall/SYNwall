@@ -12,6 +12,7 @@ message = b'CANYOUREAD'
 
 def main(host,proto):
     if proto == 'tcp':
+	print('[+] Testing TCP protocol')
         try:
             Thread(target=start_tcp_server, args=(host, port, message)).start()
         except:
@@ -25,6 +26,7 @@ def main(host,proto):
         time.sleep(1)
 
     if proto == 'udp':
+	print('[+] Testing UDP protocol')
         try:
             Thread(target=start_udp_server, args=(host, port, message)).start()
         except:
