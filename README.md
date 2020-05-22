@@ -45,6 +45,8 @@ It has several parameters that allow you to customize the behaviour:
 
   Enable/Disable the OTP for UDP protocol. By default it is **disabled**. Set to **1** to enable it. The OTP on UDP requires the module to be active on both of the communicating devices, since the OTP must be removed (by the module) before the packet is forwarded to the application level. If this is not true, you may experience weird behaviors.
   The UDP connection tracking, relies on **conntrack** module, so you may have to insert it to use this functionality (this depends on the installation). An error will be displayed in the kernel log if so.
+  
+  **NOTE**: by default, port 53 (DNS) and 123 (NTP) are blacklisted for outgoing connection, so the OTP is not added. If you need to change this, look for `udp_blacklist[]` array. I will add a parameter for this in the future.
 
 - Time precision parameter
 
@@ -165,6 +167,8 @@ It has only one parameter different from the **SYNwall** config, the **dstnet_li
 
   Enable/Disable the OTP for UDP protocol. Set to **0** to disable it or **1** to enable it. The OTP on UDP requires the module to be active on both of the communicating devices, since the OTP must be removed (by the module) before the packet is forwarded to the application level. If this is not true, you may experience weird behaviors.
   The UDP connection tracking, relies on **conntrack** module, so you may have to insert it to use this functionality (this depends on the installation). An error will be displayed in the kernel log if so.
+  
+  **NOTE**: by default, port 53 (DNS) and 123 (NTP) are blacklisted for outgoing connection, so the OTP is not added. If you need to change this, look for `udp_blacklist[]` array. I will add a parameter for this in the future.
 
 - Time precision parameter
 
