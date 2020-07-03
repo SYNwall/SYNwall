@@ -116,6 +116,12 @@ Project Structure
 
 **SYNwall_distrib** repository:
    - Ansible scripts for automatic distribution. See README.md there
+   
+**SYNwall_ATAES132** repository:
+   - PoC for secure EEPROM usage (PSK storage). See README.md there
+   
+**SYNwall_docs** repository:
+   - Some docs, videos, DEMOs
 
 Performance
 -----------
