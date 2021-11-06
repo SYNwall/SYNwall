@@ -24,8 +24,8 @@ KERNEL := /lib/modules/$(shell uname -r)/build
 #
 DBGLVL := -DDBGLVL=1
 
-SYNwall-objs += SYNwall_netfilter.o SYNquark.o SYNauth.o
-SYNgate-objs += SYNgate_netfilter.o SYNquark.o SYNauth.o
+SYNwall-objs += SYNwall_netfilter.o SYNquark.o SYNauth.o SYNhelpers.o
+SYNgate-objs += SYNgate_netfilter.o SYNquark.o SYNauth.o SYNhelpers.o
 ccflags-y += -O2 -Wall $(DEBUG) $(DBGLVL)
 
 all:
