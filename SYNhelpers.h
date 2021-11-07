@@ -18,8 +18,12 @@
  *
  */
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 12, 0)
+
 /**
  *  find_module - replacement of find_module, removed from kernels >= 5.12
  *  @name: pointer to the string with module name
  */
 struct module *find_module(const char *name);
+
+#endif
