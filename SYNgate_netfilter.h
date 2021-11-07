@@ -165,3 +165,10 @@ static u8 process_udp_out(struct sk_buff *skb, struct iphdr *iph,
  *  satisfied
  */
 static void logs_udp_error(void);
+
+/**
+ *  module_is_loaded - verify if a module is already loaded
+ *
+ *  Returns 1 if module is loaded, 0 otherwise.
+ */
+static u8 module_is_loaded(const char *name);

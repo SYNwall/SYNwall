@@ -516,7 +516,6 @@ exit_drop:
 // Load the module
 static int __init SYNwall_init(void)
 {
-  struct module *mod;
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 13, 0)
   int random_res;
@@ -533,13 +532,13 @@ static int __init SYNwall_init(void)
   // Check for needed modules (for UDP protocol)
   if (enable_udp == 1)
     {
-      mod = find_module("xt_conntrack");
-      if (!mod)
+      if (!module_is_loaded("xt_conntrack"))
         {
           logs_udp_error();
           goto exit_error;
         }
     }
+
   // Define PAYLOADLEN depending on psk length
   PAYLOADLEN = DIGEST + psklen;
 
@@ -1234,6 +1233,20 @@ static void logs_udp_error(void)
   printk(KERN_INFO "%s: You may try the following command:\n", DBGTAG);
   printk(KERN_INFO "%s:   # sudo iptables -A OUTPUT -m conntrack -p udp "
          "--ctstate NEW,RELATED,ESTABLISHED -j ACCEPT\n", DBGTAG);
+}
+
+// Check if module for UDP is loaded
+static u8 module_is_loaded(const char *name)
+{
+  struct module *list_mod = NULL;
+  list_for_each_entry(list_mod, THIS_MODULE->list.prev, list)
+  {
+      if (strcmp(list_mod->name, name) == 0)
+      {
+        return 1;
+      }
+  }
+  return 0;
 }
 
 #ifdef DEBUG

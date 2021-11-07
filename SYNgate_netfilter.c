@@ -687,7 +687,6 @@ exit_error:
 // It returns 0 if success, otherwise 1
 static u8 validate_udp(void)
 {
-  struct module *mod;
   uint8_t udp_used = 0;
   int i;
 
@@ -708,8 +707,7 @@ static u8 validate_udp(void)
   // Check for needed modules (for UDP protocol)
   if (udp_used == 1)
     {
-      mod = find_module("xt_conntrack");
-      if (!mod)
+      if (!module_is_loaded("xt_conntrack"))
         {
           logs_udp_error();
           goto exit_error;
@@ -807,6 +805,20 @@ static void logs_udp_error(void)
   printk(KERN_INFO "%s: You may try the following command:\n", DBGTAG);
   printk(KERN_INFO "%s:   # sudo iptables -A OUTPUT -m conntrack -p udp "
          "--ctstate NEW,RELATED,ESTABLISHED -j ACCEPT\n", DBGTAG);
+}
+
+// Check if module for UDP is loaded
+static u8 module_is_loaded(const char *name)
+{
+  struct module *list_mod = NULL;
+  list_for_each_entry(list_mod, THIS_MODULE->list.prev, list)
+  {
+      if (strcmp(list_mod->name, name) == 0)
+      {
+        return 1;
+      }
+  }
+  return 0;
 }
 
 module_init(SYNgate_init);
