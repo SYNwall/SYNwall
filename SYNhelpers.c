@@ -30,7 +30,7 @@ struct module *find_module(const char *name)
 {
   struct module *list_modules = NULL;
 
-  /* Try to find the module browsing the list */
+  // Try to find the module browsing the list
   list_for_each_entry(list_modules, THIS_MODULE->list.prev, list)
     {
       if (strcmp(list_modules->name, name) == 0)
@@ -42,3 +42,57 @@ struct module *find_module(const char *name)
 }
 
 #endif
+
+// Try to load and register module
+struct module *load_and_register_module(const char *module_name)
+{
+  struct module *mod;
+
+  mutex_lock(&module_mutex);
+  mod = find_module(module_name);
+
+  if (!mod)
+    {
+      mutex_unlock(&module_mutex);
+      // Module was not found, try to load it
+      if (request_module(module_name))
+        {
+          // Failed, return 
+            return NULL;
+        }
+
+        mutex_lock(&module_mutex);
+        // Now we try again to see if module is there
+        mod = find_module(module_name);
+    }
+  // Register the module
+  if (mod)
+    {
+      if (!try_module_get(mod))
+        {
+          // Registration failed
+          mod = NULL;
+        }
+    }
+  mutex_unlock(&module_mutex);
+
+  return mod;
+}
+
+// De-register module
+int unregister_module(const char *module_name)
+{
+  struct module *mod;
+  int ret = 0;
+
+  mutex_lock(&module_mutex);
+  mod = find_module(module_name);
+  mutex_unlock(&module_mutex);
+  if (mod)
+    {
+      module_put(mod);
+      ret = 1;
+    }
+
+  return ret;
+}

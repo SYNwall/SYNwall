@@ -27,3 +27,26 @@
 struct module *find_module(const char *name);
 
 #endif
+
+/**
+ *  load_and_register_module - try to locate and register a module
+ *  @module_name: name of the module
+ *
+ *  Try to locate the module, if not found try to load it. 
+ *  If everything is good, register the usage of the module and returns
+ *  the module structure. Otherwise returns NULL
+ *
+ */
+struct module *load_and_register_module(const char *module_name);
+
+/**
+ *  unregister_module - try to locate and unregister a module
+ *  @module_name: name of the module
+ *
+ *  Try to locate the module and if found it remove the references.
+ *  Returns 1 if done or 0 otherwise.
+ *  To be called only if the module has been registerd with "load_and_register_module"
+ *  function.
+ *
+ */
+int unregister_module(const char *module_name);
