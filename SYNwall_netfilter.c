@@ -39,6 +39,7 @@
 #include "SYNwall_netfilter.h"
 #include "SYNquark.h"
 #include "SYNauth.h"
+#include "SYNhelpers.h"
 
 #define DBGTAG "SYNwall"
 #define VERSION "v0.3a"
@@ -533,7 +534,7 @@ static int __init SYNwall_init(void)
   // Check for needed modules (for UDP protocol)
   if (enable_udp == 1)
     {
-      mod = find_module("xt_conntrack");
+      mod = load_and_register_module("xt_conntrack");
       if (!mod)
         {
           logs_udp_error();
@@ -663,6 +664,12 @@ static void __exit SYNwall_exit(void)
   kfree(nfho_in);
   kfree(nfho_out);
   kfree(otp_trash);
+
+  // Drops the module references
+  if (enable_udp == 1)
+    {
+      unregister_module("xt_conntrack");
+    }
 }
 
 // strlen implementation...to avoid the standard one. Not sure if it make sense

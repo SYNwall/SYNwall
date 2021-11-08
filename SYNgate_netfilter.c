@@ -40,6 +40,7 @@
 #include "SYNgate_netfilter.h"
 #include "SYNquark.h"
 #include "SYNauth.h"
+#include "SYNhelpers.h"
 
 #define DBGTAG "SYNgate"
 #define VERSION "v0.3a"
@@ -708,7 +709,15 @@ static u8 validate_udp(void)
   // Check for needed modules (for UDP protocol)
   if (udp_used == 1)
     {
+      // This is managed differently than in SYNwall: if the
+      // module is not loaded, we are not loading it automatically, since
+      // the startup may fail for other parameters.
+      // Since this should be a "server" installation, it is left to
+      // be managed manually.
+      mutex_lock(&module_mutex);
       mod = find_module("xt_conntrack");
+      mutex_unlock(&module_mutex);
+
       if (!mod)
         {
           logs_udp_error();
