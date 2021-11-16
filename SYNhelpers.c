@@ -48,12 +48,16 @@ struct module *load_and_register_module(const char *module_name)
 {
   struct module *mod;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
   mutex_lock(&module_mutex);
+#endif
   mod = find_module(module_name);
 
   if (!mod)
     {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
       mutex_unlock(&module_mutex);
+#endif
       // Module was not found, try to load it
       if (request_module(module_name))
         {
@@ -61,7 +65,9 @@ struct module *load_and_register_module(const char *module_name)
             return NULL;
         }
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
         mutex_lock(&module_mutex);
+#endif
         // Now we try again to see if module is there
         mod = find_module(module_name);
     }
@@ -74,7 +80,9 @@ struct module *load_and_register_module(const char *module_name)
           mod = NULL;
         }
     }
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
   mutex_unlock(&module_mutex);
+#endif
 
   return mod;
 }
@@ -85,9 +93,13 @@ int unregister_module(const char *module_name)
   struct module *mod;
   int ret = 0;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
   mutex_lock(&module_mutex);
+#endif
   mod = find_module(module_name);
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
   mutex_unlock(&module_mutex);
+#endif
   if (mod)
     {
       module_put(mod);

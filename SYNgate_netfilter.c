@@ -714,9 +714,13 @@ static u8 validate_udp(void)
       // the startup may fail for other parameters.
       // Since this should be a "server" installation, it is left to
       // be managed manually.
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
       mutex_lock(&module_mutex);
+#endif
       mod = find_module("xt_conntrack");
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 12, 0)
       mutex_unlock(&module_mutex);
+#endif
 
       if (!mod)
         {
