@@ -195,6 +195,17 @@ It has only one parameter different from the **SYNwall** config, the **dstnet_li
 
   Enable/Disable the antispoof protection. Set to **0** to disable it or **1** to enable it. By default the IP is not part of the OTP on SYNwall. This could lead to some replay attack. You can enable the antispoof protection to be fully safe. This may break the communication if some NATs are in place between the devices.
 
+Cross-Compiling
+---------------
+
+You can easily cross-compile by setting the following variables before doing the `make`
+
+```
+ARCH (target architecture)
+CROSS_COMPILE (toolchain path)
+KERNEL (Kernel source path)
+```
+
 Example of usage
 ----------------
 
@@ -216,7 +227,7 @@ options SYNgate enable_antispoof_list=0,1
 
 License
 -------
-GPL-3.0
+GPL-2.0
 
 Author Information
 ------------------
