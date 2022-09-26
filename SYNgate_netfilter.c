@@ -43,7 +43,7 @@
 #include "SYNhelpers.h"
 
 #define DBGTAG "SYNgate"
-#define VERSION "v0.4.1"
+#define VERSION "v0.5.0"
 
 // Max number of destinations managed by the module
 #define MAX_DESTINATIONS   100
