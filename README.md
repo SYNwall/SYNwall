@@ -4,6 +4,8 @@ Zero config (IoT) firewall.
 
 SYNwall is a project built (for the time being) as a Linux Kernel Module, to implement a transparent and no-config/no-maintenance firewall.
 
+You may want to have a look to the ![use case](https://github.com/SYNwall/SYNwall/blob/master/USECASE.md) for an example of usage.
+
 Basics
 ------
 
