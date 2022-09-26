@@ -1,6 +1,6 @@
 # SYNwall use case
 
-We can make a quick example to show one of many use cases where a SYNwall-like approach can be useful. This comes from a real-world scenario we saw several time.
+We can make a quick example to show one of many use cases where a SYNwall-like approach can be useful. This comes from a real-world scenario we faced in the past.
 
 
 
