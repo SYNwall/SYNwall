@@ -11,8 +11,20 @@ ifndef SYNGATE
   endif
 endif
 
+ifdef ARCH
+  EXT_ARCH = ARCH=$(ARCH)
+endif
+
+ifdef CROSS_COMPILE
+  EXT_CROSS = CROSS_COMPILE=$(CROSS_COMPILE)
+endif
+
+ifndef KERNEL
+  KERNEL := /lib/modules/$(shell uname -r)/build
+endif
+
 PWD := $(shell pwd)
-KERNEL := /lib/modules/$(shell uname -r)/build
+
 #
 # Enable messages in Kernel log (uncomment following line)
 #
@@ -29,24 +41,30 @@ SYNgate-objs += SYNgate_netfilter.o SYNquark.o SYNauth.o SYNhelpers.o
 ccflags-y += -O2 -Wall $(DEBUG) $(DBGLVL)
 
 all:
-	make -C $(KERNEL) M=$(PWD) modules
-	strip --strip-debug *.ko
+	make $(EXT_ARCH) $(EXT_CROSS) -C $(KERNEL) M=$(PWD) modules
+        ifndef CROSS_COMPILE
+	  strip --strip-debug *.ko
+        endif
 	rm -r -f *.mod.c .*.cmd *.symvers *.o *.order
 
 clean:
 	make -C $(KERNEL) M=$(PWD) clean
 
 test:
-	$(info **** REMEMBER TO REMOVE MODULE (sudo rmmod SYNwall) if test fails ****)
-	$(info )
-	$(info **** In case of errors, review Kernel logs as well (/var/log/messages or /var/log/kern.log) ****)
-	$(info )
-	sudo insmod SYNwall.ko psk=12345678901234567890123456789012 load_delay=0 precision=8
-	sleep 2
-	python tests/test.py tcp `ip route get 8.8.8.8 | head -1 | sed -n "s/.*src \([0-9.]\+\).*/\1/p"`
-	sudo rmmod SYNwall
-	sleep 1
-	sudo insmod SYNwall.ko psk=12345678901234567890123456789012 load_delay=0 precision=8 enable_udp=1
-	sleep 2
-	python tests/test.py udp `ip route get 8.8.8.8 | head -1 | sed -n "s/.*src \([0-9.]\+\).*/\1/p"`
-	sudo rmmod SYNwall
+        ifndef CROSS_COMPILE
+	  $(info **** REMEMBER TO REMOVE MODULE (sudo rmmod SYNwall) if test fails ****)
+	  $(info )
+	  $(info **** In case of errors, review Kernel logs as well (/var/log/messages or /var/log/kern.log) ****)
+	  $(info )
+	  sudo insmod SYNwall.ko psk=12345678901234567890123456789012 load_delay=0 precision=8
+	  sleep 2
+	  python tests/test.py tcp `ip route get 8.8.8.8 | head -1 | sed -n "s/.*src \([0-9.]\+\).*/\1/p"`
+	  sudo rmmod SYNwall
+	  sleep 1
+	  sudo insmod SYNwall.ko psk=12345678901234567890123456789012 load_delay=0 precision=8 enable_udp=1
+	  sleep 2
+	  python tests/test.py udp `ip route get 8.8.8.8 | head -1 | sed -n "s/.*src \([0-9.]\+\).*/\1/p"`
+	  sudo rmmod SYNwall
+        else
+	  $(info Tests can not be done in CROSS_COMPILE env)
+        endif
