@@ -72,7 +72,7 @@ Since the solution is completely P2P, we don't have a client-server situation, b
 
 In our scenario we have 3 different systems we want to protect (let's call them `NodeX`) and an external system to manage connections.
 
-### Setp on `Node1` and run:
+### Step on `Node1` and run:
 
 ```
 sudo insmod SYNwall.ko psk=123456789012345678901234567890123 precision=10 portk=12,13,14,15,16 load_delay=10000 enable_udp=1
