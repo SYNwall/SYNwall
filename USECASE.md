@@ -68,7 +68,17 @@ KERNEL                   ---> Kernel Sources (header at least)
 
 ## Installing
 
-Once the module is on the end device, the installation is simple as an `insmod`
+Since the solution is completely P2P, we don't have a client-server situation, but several nodes with the same capabilities. Once the module is on the end device, the installation is simple as an `insmod`.
+
+In our scenario we have 3 different systems we want to protect (let's call them `NodeX`) and an external system to manage connections.
+
+### Setp on `Node1` and run:
+
+```
+sudo insmod SYNwall.ko psk=123456789012345678901234567890123 precision=10 portk=12,13,14,15,16 load_delay=10000 enable_udp=1
+```
+
+### Step on `Node2` and `Node3` and do the same:
 
 ```
 sudo insmod SYNwall.ko psk=123456789012345678901234567890123 precision=10 portk=12,13,14,15,16 load_delay=10000 enable_udp=1
@@ -78,11 +88,15 @@ The important part here is the `PSK`: this key will be shared between all the de
 
 For all the other parameter and instructions, see the main [README](https://github.com/SYNwall/SYNwall/blob/master/README.md).
 
+To check the functionality, it's just a matter of trying a ping or a SSH connection between `Node1` and `Node2` (it should work) and from an external Node (without SYNwall) and `NodeX` (it should not work).
 
+### Video
+
+You can also have a look to this quick [video](https://synwall.io/assets/videos/SYNwall_site_demo.webm) (1:17) to see this in action.
 
 ## Managing
 
 In order to keep access to our end devices once the SYNwall has been installed, you need alternatively:
 
-- a system (PC, Server, etc) with SYNwall installed
+- a system (PC, Server, etc) with SYNwall installed (same procedure as before)
 - a proxy with SYNgate installed (a customized SYNwall module build to act as a gateway for connections, see [README](https://github.com/SYNwall/SYNwall/blob/master/README.md))
