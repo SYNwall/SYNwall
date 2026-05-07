@@ -33,6 +33,21 @@
 #include <linux/skbuff.h>
 #endif
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0)
+#include <crypto/algapi.h>
+#define ct_memneq crypto_memneq
+#else
+static __always_inline int ct_memneq(const void *a, const void *b, size_t len)
+{
+  const volatile u8 *x = a, *y = b;
+  u8 diff = 0;
+  while (len--)
+    diff |= *x++ ^ *y++;
+  barrier();
+  return diff;
+}
+#endif
+
 #include "SYNquark.h"
 #include "SYNauth.h"
 
@@ -89,25 +104,6 @@ static u64 get_current_time(unsigned char precision)
   return current_time;
 }
 
-// Just a replacement of memcmp
-static int __internal_memcmp(u8 *buff1, u8 *buff2, int length)
-{
-  int i;
-  int valid = 0;
-
-  for (i = 0; i < length; i++)
-    {
-      if (*buff1 != *buff2)
-        {
-          valid = 1;
-          break;
-        }
-      buff1++;
-      buff2++;
-    }
-  return valid;
-}
-
 // BEGIN: OTP Trash management functions
 extern u8 *otp_trash;
 extern int trash_overfull;
@@ -123,7 +119,7 @@ static int trash_dive(u8 *hash)
 
   for (i = 0; i < trash_overfull; i++)
     {
-      if (__internal_memcmp(otp_trash + (DIGEST * i), hash, DIGEST) == 0)
+      if (ct_memneq(otp_trash + (DIGEST * i), hash, DIGEST) == 0)
         {
 #ifdef DEBUG
           if (DBGLVL >= 2)
@@ -274,7 +270,7 @@ int validate_otp(u8 *otp, u8 *key, int keylen, unsigned char precision,
       XOR(key, otp + DIGEST, rnd_buffer, keylen);
       if (HASH(key, time, rnd_buffer, daddr, hash_buffer, keylen) == 0)
         {
-          if (__internal_memcmp(hash_buffer, otp, DIGEST) == 0)
+          if (ct_memneq(hash_buffer, otp, DIGEST) == 0)
             {
               ret = validate_otp_replay(hash_buffer, time);
             }
